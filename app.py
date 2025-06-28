@@ -2,6 +2,7 @@ from flask import Flask, request, render_template
 import asyncio
 import io
 import os
+os.environ["PLAYWRIGHT_BROWSERS_PATH"] = "0"
 from contextlib import redirect_stdout
 from transcript_worker import process_url
 
