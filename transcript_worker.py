@@ -6,7 +6,7 @@ from playwright.async_api import async_playwright, TimeoutError
 # --- Configuration ---
 URL_FILE = "videos.txt"
 OUTPUT_DIR = "transcripts"
-BROWSER_TO_USE = "chrome"
+#BROWSER_TO_USE = "chrome"
 
 # --- Shared Utility Functions ---
 
@@ -73,7 +73,7 @@ async def process_url(url: str):
     print(f"\n▶️ Processing: {url}")
 
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True, channel=BROWSER_TO_USE)
+        browser = await p.chromium.launch(headless=True)#, channel=BROWSER_TO_USE)
         page = await browser.new_page()
 
         vtt_future = asyncio.Future()
