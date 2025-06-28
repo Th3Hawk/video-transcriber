@@ -7,17 +7,26 @@ app = Flask(__name__)
 @app.route("/", methods=["GET", "POST"])
 def index():
     transcript = ""
+    logs = ""
+
     if request.method == "POST":
         url = request.form.get("video_url")
-        async def run_single():
-            await process_url(url)
-            from pathlib import Path
-            files = sorted(Path("transcripts").glob("*.txt"), key=lambda p: p.stat().st_mtime, reverse=True)
-            if files:
-                return files[0].read_text()
-            return "[No transcript file found]"
-        transcript = asyncio.run(run_single())
-    return render_template("index.html", transcript=transcript)
+
+        async def run_and_capture():
+            f = io.StringIO()
+            with redirect_stdout(f):
+                try:
+                    result = await process_url(url)  # Now returns transcript directly
+                except Exception as e:
+                    result = "[An error occurred.]"
+                    f.write(f"[ERROR] {e}\n")
+            return result, f.getvalue()
+
+        transcript, logs = asyncio.run(run_and_capture())
+
+    return render_template("index.html", transcript=transcript, logs=logs)
+
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=5000)

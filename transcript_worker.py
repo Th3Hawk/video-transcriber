@@ -115,9 +115,11 @@ async def process_url(url: str):
                 print(f"  - Transcript file '{output_file}' already exists. Overwriting.")
 
             transcript = parse_vtt(vtt_content)
-            with open(output_file, "w", encoding="utf-8") as f:
-                f.write(transcript)
-            print(f"✅ Transcript saved to '{output_file}'")
+            #with open(output_file, "w", encoding="utf-8") as f:
+            #    f.write(transcript)
+            print(f"✅ Transcript returned")
+            return transcript
+            #print(f"✅ Transcript saved to '{output_file}'")
 
         except asyncio.TimeoutError:
             print("  - ❌ FAILED: Timed out waiting for VTT file.")
@@ -128,7 +130,7 @@ async def process_url(url: str):
 
 
 def main():
-    Path(OUTPUT_DIR).mkdir(exist_ok=True)
+    #Path(OUTPUT_DIR).mkdir(exist_ok=True)
     if not Path(URL_FILE).exists():
         print(f"Error: URL file '{URL_FILE}' not found.")
         with open(URL_FILE, "w") as f:
